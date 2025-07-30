@@ -1,0 +1,5 @@
+a2a-python==0.5.3
+httpx>=0.26
+httpx-sse>=0.4
+uvicorn[standard]>=0.29
+openai>=1.0

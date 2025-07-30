@@ -168,6 +168,16 @@ Verrouille la version du SDK pour éviter de futures ruptures :
 a2a-python==0.5.3
 ```
 
+## Installation
+
+Installez les dépendances dans un environnement virtuel :
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
 ---
 
 _Fin du document._  
