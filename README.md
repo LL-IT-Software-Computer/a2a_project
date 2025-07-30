@@ -5,6 +5,7 @@ Ce document décrit comment interagissent les deux scripts Python :
 | Script | Rôle | Point d’entrée |
 |--------|------|----------------|
 | **`a2a_example.py`** | Serveur : expose un agent A2A nommé *Echo+ Agent* capable d’appliquer plusieurs styles au texte (MAJUSCULES, minuscules, *snake_case*, …). | `uvicorn a2a_example:app …` |
+| **`a2a_llm_agent.py`** | Serveur : proxy vers l’API OpenAI avec résumé de documents. | `uvicorn a2a_llm_agent:app …` |
 | **`test_python.py`** | Client : découvre la carte A2A de l’agent, envoie un message une première fois en mode *non‑streaming*, puis refait la même requête en mode *streaming* SSE. | `python3 test_python.py` |
 
 ---
@@ -134,7 +135,10 @@ a2a-python>=0.5
 httpx>=0.26
 httpx-sse>=0.4
 uvicorn[standard]>=0.29
+openai>=1.0
 ```
+
+L’API OpenAI nécessite la variable d’environnement `OPENAI_API_KEY`.
 
 Verrouille la version du SDK pour éviter de futures ruptures :
 
