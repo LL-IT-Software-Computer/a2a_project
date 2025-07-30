@@ -4,7 +4,7 @@ Ce document décrit comment interagissent les deux scripts Python :
 
 | Script | Rôle | Point d’entrée |
 |--------|------|----------------|
-| **`a2a_example.py`** | Serveur : expose un agent A2A nommé *Uppercase Agent* qui transforme chaque message utilisateur en **MAJUSCULES**. | `uvicorn a2a_example:app …` |
+| **`a2a_example.py`** | Serveur : expose un agent A2A nommé *Echo+ Agent* capable d’appliquer plusieurs styles au texte (MAJUSCULES, minuscules, *snake_case*, …). | `uvicorn a2a_example:app …` |
 | **`test_python.py`** | Client : découvre la carte A2A de l’agent, envoie un message une première fois en mode *non‑streaming*, puis refait la même requête en mode *streaming* SSE. | `python3 test_python.py` |
 
 ---
@@ -14,7 +14,7 @@ Ce document décrit comment interagissent les deux scripts Python :
 ```mermaid
 sequenceDiagram
     participant Client
-    participant AgentServer as Uppercase Agent
+    participant AgentServer as Echo+ Agent
 
     Client->>AgentServer: GET /.well‑known/agent.json (carte A2A)
     AgentServer-->>Client: AgentCard (JSON)
@@ -30,26 +30,32 @@ sequenceDiagram
 
 ## 2. Détails de `a2a_example.py`
 
-### 2.1 UppercaseAgent  
+### 2.1 EchoAgent
 ```python
-class UppercaseAgent:
-    async def transform(self, text: str) -> str:
+class EchoAgent:
+    async def transform(self, text: str, style: str) -> str:
         await asyncio.sleep(0.1)  # petite latence simulée
-        return text.upper()
+        if style == "uppercase":
+            return text.upper()
+        if style == "lowercase":
+            return text.lower()
+        if style == "snake_case":
+            return text.replace(" ", "_").lower()
+        return text
 ```
-*Se contente de mettre le texte reçu en majuscules.*
+*Applique simplement le style demandé au texte reçu.*
 
-### 2.2 UppercaseAgentExecutor  
+### 2.2 EchoAgentExecutor
 * Pont entre le protocole A2A et la logique métier.
 * Récupère le message utilisateur via `RequestContext` → `params.message`.
 * Extrait puis concatène les parties texte (`parts`).
-* Appelle `UppercaseAgent.transform`.
+* Appelle `EchoAgent.transform` avec le style choisi.
 * Empile la réponse dans `event_queue` (obligatoirement avec `await`).
 
 ### 2.3 AgentCard  
 Expose publiquement, à l’URL `http://localhost:9999/.well-known/agent.json`, une **fiche d’identité** décrivant :
 * nom, description, version,
-* compétences (skill *uppercase*),
+* compétences (skill *echo-plus*),
 * indicateur `capabilities.streaming = true` (support SSE).
 
 ### 2.4 Application Starlette  
