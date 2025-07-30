@@ -1,5 +1,3 @@
-<<<<<<< HEAD
 pycache/
-=======
 __pycache__
->>>>>>> 9882f27 (add cache to gitignore)
+.env
