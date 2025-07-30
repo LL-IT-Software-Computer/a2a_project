@@ -118,6 +118,28 @@ Réponse non‑streaming : … 'text': 'SALUT' …
 Chunk streaming       : … 'text': 'SALUT' …
 ```
 
+### 4.1 Proxy LLM et résumé de documents
+
+Pour tester l'autre serveur, définissez d'abord la clé OpenAI :
+
+```bash
+export OPENAI_API_KEY=...  # votre clé API
+```
+
+Puis lancez :
+
+```bash
+uvicorn a2a_llm_agent:app --host 0.0.0.0 --port 9999 --reload
+```
+
+Vous pouvez réutiliser `test_python.py` ou simplement appeler l'API :
+
+```bash
+curl -X POST http://localhost:9999/ \
+  -H 'Content-Type: application/json' \
+  -d '{"message": {"role": "user", "parts": [{"kind": "text", "text": "Bonjour"}]}}'
+```
+
 ---
 
 ## 5. Personnalisation
