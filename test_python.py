@@ -12,7 +12,15 @@ async def main():
         client = A2AClient(httpx_client=httpx_client, agent_card=agent_card)
 
         # Non-streaming
-        payload = {"message": {"role": "user", "parts":[{"kind":"text","text":"salut"}], "messageId": uuid4().hex}}
+        payload = {
+            "message": {
+                "role": "user",
+                "parts": [{"kind": "text", "text": "salut"}],
+                "messageId": uuid4().hex,
+            },
+            "style": "snake_case",
+            "context_id": "demo",
+        }
         req = SendMessageRequest(id=str(uuid4()), params=MessageSendParams(**payload))
         res = await client.send_message(req)
         print("Réponse non‑streaming :", res.model_dump())
